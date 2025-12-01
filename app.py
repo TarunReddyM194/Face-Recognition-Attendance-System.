@@ -3,6 +3,49 @@ import streamlit as st
 import json
 import bcrypt
 
+import streamlit as st
+import json
+
+# ---------- SIMPLE ADMIN LOGIN (USERNAME + PASSWORD) ----------
+
+# Hard-coded admin credentials for now
+ADMIN_USERNAME = "Faculty"
+ADMIN_PASSWORD = "JU"
+
+# Initialize session state for login
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if "current_admin" not in st.session_state:
+    st.session_state.current_admin = None
+
+# If not logged in, show login page and stop app
+if not st.session_state.logged_in:
+    st.title("🔐 Admin Login")
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            st.session_state.logged_in = True
+            st.session_state.current_admin = username
+            st.success("Login successful! Loading dashboard...")
+            st.rerun()
+
+        else:
+            st.error("Invalid username or password")
+
+    # Very important: stop the rest of the app until login is successful
+    st.stop()
+
+# If logged in, show who is logged in and a Logout button
+st.sidebar.success(f"Logged in as: {st.session_state.current_admin}")
+if st.sidebar.button("Logout"):
+    st.session_state.logged_in = False
+    st.session_state.current_admin = None
+    st.rerun()
+
 def load_admins():
     try:
         with open("admins.json", "r") as f:
@@ -151,7 +194,7 @@ tabs = st.tabs([
 with tabs[0]:
     st.header("Attendance table")
     df = read_attendance_df()
-    st.table(df)
+    st.text(df.to_string(index=False))
 
     # filter controls
     c1, c2, c3 = st.columns([1,1,1])
@@ -167,7 +210,10 @@ with tabs[0]:
         df_filtered = df_filtered[df_filtered["Faculty"].str.contains(fac_sel.strip(), case=False, na=False)]
 
     st.write(f"Showing {len(df_filtered)} rows for {date_sel.isoformat()}")
-    st.dataframe(df_filtered, use_container_width=True)
+    if df_filtered.empty:
+    st.info("No records found for the selected filters.")
+    else:
+    st.text(df_filtered.to_string(index=False))
 
     # Export
     if st.button("Export filtered to CSV"):
