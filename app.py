@@ -157,6 +157,27 @@ if st.sidebar.button("Logout"):
     st.rerun()
 
 st.title("📋 Face Attendance — Admin Dashboard")
+# ---- Current Session Status ----
+st.markdown("## 📚 Current Session Status")
+
+session = load_json_or_empty(SESSION_FILE)
+
+if session and session.get("active"):
+    faculty_id = session.get("faculty", "Unknown")
+    subject = session.get("subject", "Unknown")
+    start_time = session.get("start_time", "")
+
+    faculty_map = load_json_or_empty(FACULTY_FILE)
+    faculty_name = faculty_map.get(faculty_id, {}).get("display", faculty_id)
+
+    st.success("Session is ACTIVE")
+    st.write(f"**Faculty:** {faculty_name}")
+    st.write(f"**Subject:** {subject}")
+    if start_time:
+        st.write(f"**Started at:** {start_time}")
+else:
+    st.warning("No active session right now.")
+
 
 faculty_map = load_json_or_empty(FACULTY_FILE)
 timetable = load_json_or_empty(TIMETABLE_FILE)
