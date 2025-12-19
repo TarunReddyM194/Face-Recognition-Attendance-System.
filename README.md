@@ -1,27 +1,31 @@
-Project Overview
+# Face Recognition Attendance System (Under Development)
 
-This system automatically marks attendance using real-time face recognition. When a registered student or faculty member appears in front of the camera, their identity is verified and attendance is stored with timestamp, subject, and faculty details.
+An automated attendance management system using real-time face recognition.
+Designed for academic environments with faculty-first session control and admin dashboard.
 
-Tech Stack
+## 🔹 Project Status
+🚧 Under Development  
+(Currently implementing admin dashboard, session tracking, and UI improvements)
 
-Python – Core application logic
+## 🔹 Features Implemented
+- Face recognition–based attendance marking
+- Faculty-first session control
+- Subject and faculty mapping
+- Secure admin login system
+- Admin dashboard using Streamlit
+- Live session status display
+- Attendance filtering and export
 
-OpenCV & face_recognition – Face detection and face embeddings
+## 🔹 Tech Stack
+- Python
+- OpenCV
+- face_recognition (dlib)
+- Streamlit
+- Pandas
+- JSON (for configuration)
 
-Streamlit – Web-based UI (under development)
-
-Pandas & CSV – Attendance storage
-
-JSON Configurations – Timetable and faculty management
-
-Features (Completed so far)
-
-Automatic face detection using webcam
-
-Student attendance marking with date and time
-
-Faculty session detection for subject tracking
-
-Timetable-based subject mapping
-
-Facial encoding stored for faster recognition
+## 🔹 Future Enhancements
+- People Management (students & faculty)
+- Attendance analytics dashboard
+- Role-based access (Faculty / Admin)
+- Improved UI and reports
