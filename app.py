@@ -192,6 +192,7 @@ tabs = st.tabs([
     "Attendance",
     "Register",
     "Session Control",
+    "People Management",
     "Substitutions",
     "Encodings & Export",
     "Admin Management"
@@ -369,29 +370,64 @@ with tabs[3]:
 
 # 4) Substitutions tab
 with tabs[4]:
-    st.header("Substitution / One-day overrides")
-    subs = load_json_or_empty(SUB_FILE)
-    if not subs:
-        st.info("No substitutions saved yet.")
-    else:
-        st.write("Current substitutions (date → period → {subject, faculty}):")
-        st.json(subs)
+    st.header("👥 People Management")
 
-    st.markdown("Add / Update substitution")
-    d = st.date_input("Date")
-    period = st.text_input("Period key (ex: 11:45-12:35)")
-    new_subject = st.text_input("Subject (leave blank to keep timetable subject)")
-    new_faculty = st.text_input("Faculty ID (leave blank to keep timetable faculty)")
-    if st.button("Save substitution"):
-        key = d.isoformat()
-        subs.setdefault(key, {})
-        subs[key][period] = {}
-        if new_subject.strip():
-            subs[key][period]["subject"] = new_subject.strip()
-        if new_faculty.strip():
-            subs[key][period]["faculty"] = new_faculty.strip()
-        save_json(SUB_FILE, subs)
-        st.success("Saved substitution")
+    # ---------- Student Management ----------
+    st.subheader("🧑‍🎓 Student Management")
+
+    enc_data = load_encodings()
+    student_names = enc_data.get("names", [])
+
+    if not student_names:
+        st.info("No students found.")
+    else:
+        st.markdown("### Registered Students")
+        for s in student_names:
+            st.write("•", s)
+
+        remove_student = st.selectbox(
+            "Select student to remove",
+            options=[""] + student_names
+        )
+
+        if st.button("❌ Remove Student"):
+            if remove_student:
+                idxs = [i for i, n in enumerate(enc_data["names"]) if n != remove_student]
+                enc_data["names"] = [enc_data["names"][i] for i in idxs]
+                enc_data["encodings"] = [enc_data["encodings"][i] for i in idxs]
+                save_encodings(enc_data)
+                st.success(f"Student '{remove_student}' removed.")
+                st.rerun()
+            else:
+                st.warning("Please select a student.")
+
+    st.markdown("---")
+
+    # ---------- Faculty Management ----------
+    st.subheader("🧑‍🏫 Faculty Management")
+
+    faculty_data = load_json_or_empty(FACULTY_FILE)
+
+    if not faculty_data:
+        st.info("No faculty found.")
+    else:
+        st.markdown("### Registered Faculty")
+        for fid, info in faculty_data.items():
+            st.write(f"• {info.get('display', fid)} ({info.get('subject', 'TBD')})")
+
+        remove_faculty = st.selectbox(
+            "Select faculty to remove",
+            options=[""] + list(faculty_data.keys())
+        )
+
+        if st.button("❌ Remove Faculty"):
+            if remove_faculty:
+                faculty_data.pop(remove_faculty)
+                save_json(FACULTY_FILE, faculty_data)
+                st.success(f"Faculty '{remove_faculty}' removed.")
+                st.rerun()
+            else:
+                st.warning("Please select a faculty.")
 
 
 # 5) Encodings & Export
