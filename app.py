@@ -368,7 +368,7 @@ with tabs[3]:
                 st.success("Updated faculty.json")
 
 
-# 4) Substitutions tab
+# 4) people management tab
 with tabs[4]:
     st.header("👥 People Management")
 
@@ -429,9 +429,42 @@ with tabs[4]:
             else:
                 st.warning("Please select a faculty.")
 
-
-# 5) Encodings & Export
+# 5) Substitutions
 with tabs[5]:
+    st.header("🔁 Substitution / One-day Overrides")
+
+    subs = load_json_or_empty(SUB_FILE)
+
+    if not subs:
+        st.info("No substitutions saved yet.")
+    else:
+        st.subheader("📋 Existing Substitutions")
+        st.json(subs)
+
+    st.markdown("---")
+    st.subheader("➕ Add / Update Substitution")
+
+    sub_date = st.date_input("Date")
+    period = st.text_input("Period (example: 11:45-12:35)")
+    subject = st.text_input("Subject (leave blank to keep original)")
+    faculty = st.text_input("Faculty ID (leave blank to keep original)")
+
+    if st.button("Save Substitution"):
+        date_key = sub_date.isoformat()
+        subs.setdefault(date_key, {})
+        subs[date_key][period] = {}
+
+        if subject.strip():
+            subs[date_key][period]["subject"] = subject.strip()
+        if faculty.strip():
+            subs[date_key][period]["faculty"] = faculty.strip()
+
+        save_json(SUB_FILE, subs)
+        st.success("Substitution saved successfully.")
+
+
+# 6) Encodings & Export
+with tabs[6]:
     st.header("Encodings & Export")
     enc = load_encodings()
     st.write("Encodings stored:", len(enc.get("names", [])))
@@ -475,8 +508,8 @@ with tabs[5]:
             st.download_button("Download attendance.csv", f, file_name="attendance.csv")
 
 
-# 6) Admin Management Tab
-with tabs[6]:
+# 7) Admin Management Tab
+with tabs[7]:
     st.header("👥 Admin Account Management")
 
     # ---- Existing admins (NO pyarrow) ----
