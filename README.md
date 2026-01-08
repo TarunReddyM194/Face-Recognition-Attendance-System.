@@ -1,31 +1,26 @@
-# Face Recognition Attendance System (Under Development)
+# Face Recognition Attendance System (v1)
 
-An automated attendance management system using real-time face recognition.
-Designed for academic environments with faculty-first session control and admin dashboard.
+An automated attendance management system using face recognition.
 
-## 🔹 Project Status
-🚧 Under Development  
-(Currently implementing admin dashboard, session tracking, and UI improvements)
+## Features
+- Real-time face recognition using OpenCV & face_recognition
+- Faculty-first session-based attendance
+- Admin dashboard built with Streamlit
+- Student & faculty management
+- Attendance viewing and export
+- Secure admin login
 
-## 🔹 Features Implemented
-- Face recognition–based attendance marking
-- Faculty-first session control
-- Subject and faculty mapping
-- Secure admin login system
-- Admin dashboard using Streamlit
-- Live session status display
-- Attendance filtering and export
-
-## 🔹 Tech Stack
+## Tech Stack
 - Python
 - OpenCV
 - face_recognition (dlib)
 - Streamlit
 - Pandas
-- JSON (for configuration)
 
-## 🔹 Future Enhancements
-- People Management (students & faculty)
+## Project Status
+Completed (v1)
+
+## Future Enhancements
+- Camera integration inside Streamlit
 - Attendance analytics dashboard
-- Role-based access (Faculty / Admin)
-- Improved UI and reports
+- Cloud deployment
